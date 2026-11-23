@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sign Up – Kestrel</title>
+  <link rel="stylesheet" href="styles.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body class="auth-page">
+<nav class="navbar">
+  <div class="nav-inner">
+    <div class="nav-logo"><i class="fa-solid fa-feather-pointed"></i> Kestrel</div>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="login.html" class="nav-link">Login</a>
+      <a href="signup.html" class="nav-link active">Sign Up</a>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" id="themeToggle" onclick="setTheme(getTheme()==='dark'?'light':'dark')"><i class="fa-solid fa-moon"></i></button>
+    </div>
+  </div>
+</nav>
+
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-header">
+      <div class="company-logo"><i class="fa-solid fa-feather-pointed"></i></div>
+      <h1>Create your workspace</h1>
+      <p>Get started with Kestrel in minutes</p>
+    </div>
+    
+    <form id="signupForm" class="auth-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label>First name</label>
+          <input type="text" id="firstName" placeholder="Sarah" required class="modal-input"/>
+        </div>
+        <div class="form-group">
+          <label>Last name</label>
+          <input type="text" id="lastName" placeholder="Chen" required class="modal-input"/>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label>Company name</label>
+        <input type="text" id="company" placeholder="Your Company" required class="modal-input"/>
+      </div>
+      
+      <div class="form-group">
+        <label>Work email</label>
+        <input type="email" id="email" placeholder="sarah@company.com" required class="modal-input"/>
+      </div>
+      
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="password" placeholder="••••••••" required class="modal-input"/>
+        <div class="password-hint">Minimum 8 characters with letters and numbers</div>
+      </div>
+      
+      <div class="form-group">
+        <label>Confirm password</label>
+        <input type="password" id="confirmPassword" placeholder="••••••••" required class="modal-input"/>
+      </div>
+      
+
+      
+      <label class="checkbox">
+        <input type="checkbox" id="terms" required/>
+        <span>I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></span>
+      </label>
+      
+      <button type="submit" class="btn-primary btn-full">Create Workspace</button>
+    </form>
+    
+    <div class="auth-footer">
+      <p>Already have an account? <a href="login.html">Sign in</a></p>
+      <p class="auth-note"><i class="fa-solid fa-shield-halved"></i> Your data is secure and encrypted</p>
+    </div>
+  </div>
+</div>
+
+<script src="data.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  applyTheme(getTheme());
+  
+  document.getElementById('signupForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    
+    const firstName = document.getElementById('firstName').value.trim();
+    const lastName = document.getElementById('lastName').value.trim();
+    const company = document.getElementById('company').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+    const teamSize = document.getElementById('teamSize').value;
+    
+    if (!firstName || !lastName || !company || !email || !password) {
+      showToast('Please fill all required fields', 'error');
+      return;
+    }
+    
+    if (password !== confirmPassword) {
+      showToast('Passwords do not match', 'error');
+      return;
+    }
+    
+    if (password.length < 8) {
+      showToast('Password must be at least 8 characters', 'error');
+      return;
+    }
+    
+    // Create user account
+    const user = {
+      email,
+      name: `${firstName} ${lastName}`,
+      company,
+      role: 'manager',
+      teamSize,
+      createdAt: new Date().toISOString()
+    };
+    
+    localStorage.setItem('kestrel_user', JSON.stringify(user));
+    
+    // Create empty team - user will add members manually
+    const team = [];
+    localStorage.setItem('kestrel_team', JSON.stringify(team));
+    
+    showToast('✓ Workspace created successfully!');
+    setTimeout(() => {
+      window.location.href = 'dashboard.html';
+    }, 1000);
+  });
+  
+  function showToast(msg, type = 'success') {
+    const t = document.createElement('div');
+    t.className = `toast ${type}`;
+    t.innerHTML = `<i class="fa-solid fa-circle-check"></i> ${msg}`;
+    document.body.appendChild(t);
+    setTimeout(() => t.remove(), 3500);
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Manager Dashboard – Kestrel</title>
+  <link rel="stylesheet" href="styles.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body class="dash-page">
+<nav class="navbar">
+  <div class="nav-inner">
+    <div class="nav-logo"><i class="fa-solid fa-feather-pointed"></i> Kestrel</div>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="dashboard.html" class="nav-link active">Manager Dashboard</a>
+      <a href="book.html" class="nav-link">Book a Meeting</a>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" id="themeToggle" onclick="setTheme(getTheme()==='dark'?'light':'dark')"><i class="fa-solid fa-moon"></i></button>
+      <div class="manager-badge"><div class="mgr-avatar">SC</div><span>Sarah Chen</span><span class="mgr-role">Manager</span></div>
+      <a href="#" onclick="logout()" class="btn-ghost" style="font-size:13px; padding:6px 12px"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+    </div>
+  </div>
+</nav>
+
+<div class="dash-layout">
+  <!-- SIDEBAR -->
+  <aside class="dash-sidebar">
+    <div class="sidebar-section-label">Navigation</div>
+    <nav class="sidebar-nav">
+      <a class="sidebar-link active" onclick="showPanel('overview')"><i class="fa-solid fa-house"></i> Overview</a>
+      <a class="sidebar-link" onclick="showPanel('schedule')"><i class="fa-regular fa-calendar"></i> My Schedule</a>
+      <a class="sidebar-link" onclick="showPanel('team')"><i class="fa-solid fa-users"></i> Team</a>
+      <a class="sidebar-link" onclick="showPanel('buffer')"><i class="fa-solid fa-shield-halved"></i> Buffer Settings</a>
+      <a class="sidebar-link" onclick="showPanel('reminders')"><i class="fa-solid fa-bell"></i> Reminders</a>
+      <a class="sidebar-link" onclick="showPanel('settings')"><i class="fa-solid fa-gear"></i> Settings</a>
+    </nav>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section-label">Team Members</div>
+    <div class="sidebar-team" id="sidebarTeam"></div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="dash-main">
+
+    <!-- OVERVIEW PANEL -->
+    <div class="panel" id="panel-overview">
+      <div class="dash-topbar">
+        <div>
+          <h1 class="dash-title" id="dashGreeting"></h1>
+          <p class="dash-sub">Here's your team's schedule for today. <span id="dashDateLabel"></span></p>
+        </div>
+        <div class="dash-topbar-actions">
+          <button class="btn-primary" onclick="openBookModal()"><i class="fa-solid fa-plus"></i> Book for Team</button>
+        </div>
+      </div>
+      <div class="dash-stats" id="dashStats"></div>
+      <div class="team-grid" id="teamGrid"></div>
+    </div>
+
+    <!-- SCHEDULE PANEL -->
+    <div class="panel" id="panel-schedule" style="display:none">
+      <h2 class="panel-title"><i class="fa-regular fa-calendar"></i> My Schedule</h2>
+      <div class="timeline" id="myScheduleTimeline"></div>
+    </div>
+
+    <!-- TEAM PANEL -->
+    <div class="panel" id="panel-team" style="display:none">
+      <div class="dash-topbar">
+        <div>
+          <h2 class="panel-title"><i class="fa-solid fa-users"></i> Team Members</h2>
+        </div>
+        <div class="dash-topbar-actions">
+          <button class="btn-primary" onclick="openAddMemberModal()"><i class="fa-solid fa-plus"></i> Add Team Member</button>
+        </div>
+      </div>
+      <div class="team-list" id="teamList"></div>
+    </div>
+
+    <!-- BUFFER PANEL -->
+    <div class="panel" id="panel-buffer" style="display:none">
+      <h2 class="panel-title"><i class="fa-solid fa-shield-halved"></i> Buffer Time Settings</h2>
+      <div class="buffer-explainer">
+        <i class="fa-solid fa-circle-info"></i>
+        <span>Buffer time is the gap Kestrel enforces after every call. A 30-min Discovery Call with 10-min buffer means the next bookable slot is 40 minutes after the call starts — not 30.</span>
+      </div>
+      <div class="buffer-settings-grid" id="bufferGrid"></div>
+      <div class="buffer-save-row">
+        <span class="buffer-note"><i class="fa-solid fa-bolt"></i> Changes apply instantly to the customer booking page.</span>
+        <button class="btn-primary" onclick="saveBufferSettings()">Save Settings</button>
+      </div>
+    </div>
+
+    <!-- REMINDERS PANEL -->
+    <div class="panel" id="panel-reminders" style="display:none">
+      <h2 class="panel-title"><i class="fa-solid fa-bell"></i> Reminder Settings</h2>
+      <div class="reminder-cards">
+        <div class="reminder-card">
+          <div class="rc-info"><span class="rc-title">Email Reminder</span><span class="rc-desc">Sent 24 hours before the meeting</span></div>
+          <label class="toggle-switch"><input type="checkbox" checked/><span class="toggle-slider"></span></label>
+        </div>
+        <div class="reminder-card">
+          <div class="rc-info"><span class="rc-title">Email Reminder</span><span class="rc-desc">Sent 1 hour before the meeting</span></div>
+          <label class="toggle-switch"><input type="checkbox" checked/><span class="toggle-slider"></span></label>
+        </div>
+        <div class="reminder-card">
+          <div class="rc-info"><span class="rc-title">SMS Reminder</span><span class="rc-desc">Sent 30 minutes before (US/UK numbers)</span></div>
+          <label class="toggle-switch"><input type="checkbox"/><span class="toggle-slider"></span></label>
+        </div>
+        <div class="reminder-card">
+          <div class="rc-info"><span class="rc-title">Buffer Alert</span><span class="rc-desc">Notify team member when buffer time starts</span></div>
+          <label class="toggle-switch"><input type="checkbox" checked/><span class="toggle-slider"></span></label>
+        </div>
+      </div>
+    </div>
+
+    <!-- SETTINGS PANEL -->
+    <div class="panel" id="panel-settings" style="display:none">
+      <h2 class="panel-title"><i class="fa-solid fa-gear"></i> Settings</h2>
+      <div class="settings-group">
+        <div class="settings-row">
+          <div class="sr-info"><span class="sr-title">Dark Mode</span><span class="sr-desc">Switch between dark and light theme</span></div>
+          <label class="toggle-switch"><input type="checkbox" id="darkModeToggle" onchange="setTheme(this.checked?'dark':'light')"/><span class="toggle-slider"></span></label>
+        </div>
+        <div class="settings-row">
+          <div class="sr-info"><span class="sr-title">Default Buffer Time</span><span class="sr-desc">Applied when no meeting-specific buffer is set</span></div>
+          <span class="sr-value">10 minutes</span>
+        </div>
+        <div class="settings-row">
+          <div class="sr-info"><span class="sr-title">Working Hours</span><span class="sr-desc">Slots outside these hours are hidden</span></div>
+          <span class="sr-value">08:00 – 18:00</span>
+        </div>
+        <div class="settings-row">
+          <div class="sr-info"><span class="sr-title">Reset Demo Data</span><span class="sr-desc">Clear all bookings and start fresh</span></div>
+          <button class="btn-ghost" onclick="resetData()">Reset</button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- BOOK FOR TEAM MODAL -->
+<div class="modal-overlay" id="bookModal" style="display:none" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <h3><i class="fa-solid fa-plus"></i> Book a Meeting for Team</h3>
+      <button class="modal-close" onclick="closeBookModal()"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <!-- Step A: Pick member + type -->
+      <div id="modalStepA">
+        <div class="modal-field">
+          <label>Team Member</label>
+          <div class="member-picker" id="memberPicker"></div>
+        </div>
+        <div class="modal-field">
+          <label>Meeting Type</label>
+          <div class="type-picker" id="typePicker"></div>
+        </div>
+        <div class="modal-field" id="customDurField" style="display:none">
+          <label>Custom Duration (minutes)</label>
+          <input type="number" id="modalCustomDur" class="modal-input" min="5" max="480" value="20"/>
+        </div>
+        <button class="btn-primary btn-full" onclick="modalNextStep()">Choose Date & Time <i class="fa-solid fa-arrow-right"></i></button>
+      </div>
+      <!-- Step B: Pick date + slot -->
+      <div id="modalStepB" style="display:none">
+        <button class="back-link" onclick="modalBackStep()"><i class="fa-solid fa-arrow-left"></i> Back</button>
+        <div class="modal-selected-info" id="modalSelectedInfo"></div>
+        <div class="modal-cal-wrap">
+          <div class="cal-nav">
+            <button class="cal-nav-btn" onclick="modalPrevMonth()"><i class="fa-solid fa-chevron-left"></i></button>
+            <span id="modalMonthLabel"></span>
+            <button class="cal-nav-btn" onclick="modalNextMonth()"><i class="fa-solid fa-chevron-right"></i></button>
+          </div>
+          <div class="cal-weekdays"><span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span></div>
+          <div class="cal-days" id="modalCalDays"></div>
+        </div>
+        <div id="modalSlotsWrap" style="display:none">
+          <div class="slots-legend">
+            <span class="legend-item"><span class="legend-dot free-dot"></span>Available</span>
+            <span class="legend-item"><span class="legend-dot buffer-dot"></span>Buffer protected</span>
+            <span class="legend-item"><span class="legend-dot booked-dot"></span>Booked</span>
+          </div>
+          <div class="slots-grid" id="modalSlotsGrid"></div>
+        </div>
+      </div>
+      <!-- Step C: Guest details -->
+      <div id="modalStepC" style="display:none">
+        <button class="back-link" onclick="modalBackToB()"><i class="fa-solid fa-arrow-left"></i> Back</button>
+        <div class="booking-summary-bar" id="modalSummaryBar"></div>
+        <div class="modal-field">
+          <label>Guest Name *</label>
+          <input type="text" id="modalGuestName" class="modal-input" placeholder="Jane Smith"/>
+        </div>
+        <div class="modal-field">
+          <label>Guest Email *</label>
+          <input type="email" id="modalGuestEmail" class="modal-input" placeholder="jane@company.com"/>
+        </div>
+        <div class="modal-field">
+          <label>Notes</label>
+          <textarea id="modalNotes" class="modal-input" rows="2" placeholder="Agenda or context…"></textarea>
+        </div>
+        <button class="btn-primary btn-full" onclick="confirmManagerBooking()">Confirm Booking <i class="fa-solid fa-check"></i></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOOLTIP -->
+<div class="slot-tooltip" id="slotTooltip"></div>
+
+<script src="data.js"></script>
+<script src="dashboard.js"></script>
+<script src="logout.js"></script>
+</body>
+</html>

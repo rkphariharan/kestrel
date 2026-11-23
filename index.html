@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kestrel – Smart Scheduling</title>
+  <link rel="stylesheet" href="styles.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body>
+<nav class="navbar">
+  <div class="nav-inner">
+    <div class="nav-logo"><i class="fa-solid fa-feather-pointed"></i> Kestrel</div>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link active">Home</a>
+      <a href="book.html" class="nav-link">Book a Meeting</a>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" id="themeToggle" onclick="setTheme(getTheme()==='dark'?'light':'dark')"><i class="fa-solid fa-moon"></i></button>
+      <a href="login.html" class="btn-primary">Sign In</a>
+      <a href="signup.html" class="btn-ghost">Sign Up</a>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-badge"><i class="fa-solid fa-bolt"></i> Smart Buffer Technology — solving back-to-back burnout</div>
+  <h1 class="hero-title">Your team deserves<br/><span class="gradient-text">time to breathe</span></h1>
+  <p class="hero-sub">Without Kestrel, customers book slots back-to-back with zero gaps. Your team runs from call to call with no time to think, prep, or recover. Kestrel fixes this automatically.</p>
+
+
+  <!-- BEFORE / AFTER — the problem visualised -->
+  <div class="before-after">
+    <div class="ba-panel bad">
+      <div class="ba-label bad-label"><i class="fa-solid fa-xmark"></i> Without Kestrel</div>
+      <div class="ba-slots">
+        <div class="ba-slot booked">09:00 – Discovery Call (30 min)</div>
+        <div class="ba-slot danger">09:30 – Next booking starts immediately 😰</div>
+        <div class="ba-slot booked">09:30 – Product Demo (45 min)</div>
+        <div class="ba-slot danger">10:15 – Back-to-back again</div>
+        <div class="ba-slot booked">10:15 – Deep Dive (60 min)</div>
+      </div>
+      <div class="ba-verdict bad-verdict">Team member has 0 minutes between 3 calls</div>
+    </div>
+    <div class="ba-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+    <div class="ba-panel good">
+      <div class="ba-label good-label"><i class="fa-solid fa-check"></i> With Kestrel Buffer</div>
+      <div class="ba-slots">
+        <div class="ba-slot booked">09:00 – Discovery Call (30 min)</div>
+        <div class="ba-slot buffer-slot"><i class="fa-solid fa-shield-halved"></i> 09:30 – Buffer protected (10 min)</div>
+        <div class="ba-slot free-slot">09:40 – Next slot available ✓</div>
+        <div class="ba-slot booked">09:40 – Product Demo (45 min)</div>
+        <div class="ba-slot buffer-slot"><i class="fa-solid fa-shield-halved"></i> 10:25 – Buffer protected (10 min)</div>
+        <div class="ba-slot free-slot">10:35 – Next slot available ✓</div>
+      </div>
+      <div class="ba-verdict good-verdict">10 min breathing room auto-enforced after every call</div>
+    </div>
+  </div>
+</section>
+
+<section class="features">
+  <div class="section-label">What this prototype demonstrates</div>
+  <h2 class="section-title">One problem. Solved completely.</h2>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon"><i class="fa-solid fa-shield-halved"></i></div>
+      <h3>Smart Buffer Enforcement</h3>
+      <p>Buffer slots are automatically blocked after every meeting. Customers physically cannot book back-to-back — the slot simply doesn't appear.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon"><i class="fa-solid fa-users"></i></div>
+      <h3>Manager Team View</h3>
+      <p>Sarah (manager) sees all 5 team members' schedules in one dashboard. Books on their behalf. Every booking reflects live across the whole team.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon"><i class="fa-solid fa-bolt"></i></div>
+      <h3>Live Across Both Views</h3>
+      <p>Book a slot in the manager dashboard → open the customer booking page → that slot is already blocked with buffer. Real-time, no refresh needed.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon"><i class="fa-solid fa-sliders"></i></div>
+      <h3>Configurable Per Meeting Type</h3>
+      <p>15-min quick sync gets 10 min buffer. 60-min deep dive gets 15 min. Each meeting type has its own recovery time — set by the manager.</p>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-logo"><i class="fa-solid fa-feather-pointed"></i> Kestrel</div>
+    <p class="footer-copy">Prototype built to solve back-to-back meeting burnout · Kestrel 2025</p>
+  </div>
+</footer>
+
+<script src="data.js"></script>
+<script>
+  window.addEventListener('DOMContentLoaded', () => applyTheme(getTheme()));
+</script>
+</body>
+</html>
